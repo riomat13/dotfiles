@@ -160,7 +160,7 @@ set laststatus=2
 set cmdheight=2
 
 " show the current line
-set cursorline
+"set cursorline
 
 " Last line
 set showmode
@@ -228,12 +228,12 @@ set guifont=DroidSansMono\ Nerd\ Font\ 11
 let g:WebDevIconUnicodeDecorateFolderNodes = 1
 
 " Line style (Airline)
-let g:airline_theme = 'wombat'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'jsformatter'
-let g:airline#extensions#wordcount#enabled = 0
-let g:airline_powerline_fonts = 1
+"let g:airline_theme = 'wombat'
+"let g:airline#extensions#branch#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#formatter = 'jsformatter'
+"let g:airline#extensions#wordcount#enabled = 0
+"let g:airline_powerline_fonts = 1
 
 " ==========================================================
 "  netrw
@@ -275,6 +275,77 @@ set nobackup " no back up when saved
 set noswapfile " no swap file when editing
 
 " ==========================================================
+"  Status line
+" ==========================================================
+" TODO: need to customize
+" Statusline modifications, added Fugitive Status Line & Syntastic Error Message
+let g:last_mode = ''
+function! Mode()
+  let l:mode = mode()
+
+  if l:mode !=# g:last_mode
+    let g:last_mode = l:mode
+
+    hi User2 guifg=#005f00 guibg=#CAE682 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
+    hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=241
+    hi User4 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
+    hi User5 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
+    hi User6 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
+    hi User7 guifg=#ffff00 guibg=#8a8a8a gui=bold ctermfg=190 ctermbg=245 cterm=bold
+    hi User8 guifg=#8a8a8a guibg=#414243 ctermfg=245 ctermbg=238
+
+    if l:mode ==# 'n'
+      hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=191
+      hi User3 guifg=#CAE682 ctermfg=191
+    elseif l:mode ==# "i"
+      hi User2 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
+      hi User3 guifg=#FFFFFF ctermfg=255
+    elseif l:mode ==# "R"
+      hi User2 guifg=#FFFFFF guibg=#df0000 ctermfg=255 ctermbg=162
+      hi User3 guifg=#df0000 ctermfg=162
+    elseif l:mode ==? "v" || l:mode ==# ""
+      hi User2 guifg=#4e4e4e guibg=#7E30A8 ctermfg=254 ctermbg=91
+      hi User3 guifg=#7E30A8 ctermfg=91
+    endif
+  endif
+
+  if l:mode ==# "n"
+    return "  NORMAL "
+  elseif l:mode ==# "i"
+    return "  INSERT "
+  elseif l:mode ==# "R"
+    return "  REPLACE "
+  elseif l:mode ==# "v"
+    return "  VISUAL "
+  elseif l:mode ==# "V"
+    return "  V·LINE "
+  elseif l:mode ==# ""
+    return "  V·BLOCK "
+  else
+    return l:mode
+  endif
+endfunction
+
+set statusline=%2*%{Mode()}%3*⮀%1*
+set statusline+=%#StatusLine#
+set statusline+=%{strlen(fugitive#statusline())>0?'\ ⭠\ ':''}
+set statusline+=%{matchstr(fugitive#statusline(),'(\\zs.*\\ze)')}
+set statusline+=%{strlen(fugitive#statusline())>0?'\ \ ⮁\ ':'\ '}
+set statusline+=%f\ %{&ro?'⭤':''}%{&mod?'+':''}%<
+set statusline+=%4*⮀
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%=
+set statusline+=%4*⮂
+set statusline+=%#StatusLine#
+set statusline+=\ %{strlen(&fileformat)>0?&fileformat.'\ ⮃\ ':''}
+set statusline+=%{strlen(&fileencoding)>0?&fileencoding.'\ ⮃\ ':''}
+set statusline+=%{strlen(&filetype)>0?&filetype:''}
+set statusline+=\ %8*⮂
+set statusline+=%7*%4p%%
+set statusline+=\ %6*⮂%5*⭡\ %5l:%2c
+
+" ==========================================================
 "  python
 " ==========================================================
 " disable docstring
@@ -285,9 +356,14 @@ let python_highlight_all = 1
 autocmd BufNewFile *.py 0r $HOME/.vim/template/template.py
 
 " ==========================================================
-"  cpp
+"  C/C++
 " ==========================================================
+autocmd BufNewFile *.c 0r $HOME/.vim/template/template.c
+autocmd BufNewFile *.h 0r $HOME/.vim/template/template.h
+
+autocmd BufNewFile *.cc 0r $HOME/.vim/template/template.cc
 autocmd BufNewFile *.cpp 0r $HOME/.vim/template/template.cpp
+autocmd BufNewFile *.hpp 0r $HOME/.vim/template/template.hpp
 
 " ==========================================================
 "  html/css
