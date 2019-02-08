@@ -35,6 +35,89 @@ if dein#check_install()
   call dein#install()
 endif
 
+call dein#add('Shougo/deoplete.nvim')
+if !has('nvim')
+  call dein#add('roxma/nvim-yarp')
+  call dein#add('roxma/vim-hug-neovim-rpc')
+endif
+let g:deoplete#enable_at_startup = 1
+
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
+
+" ----------------------------
+"  Neocomplete
+" ----------------------------
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
 " Helps force plugins to load correctly when it is turned back on below
 filetype off
 
@@ -235,6 +318,31 @@ let g:WebDevIconUnicodeDecorateFolderNodes = 1
 "let g:airline#extensions#wordcount#enabled = 0
 "let g:airline_powerline_fonts = 1
 
+" ----------------------------
+"  neosnippet
+" ----------------------------
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+let g:neosnippet#snippets_directory='~/.vim/dein/vim-snippets/snippets'
+
 " ==========================================================
 "  netrw
 " ==========================================================
@@ -287,7 +395,7 @@ function! Mode()
     let g:last_mode = l:mode
 
     hi User2 guifg=#005f00 guibg=#CAE682 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
-    hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=241
+    hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
     hi User4 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
     hi User5 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
     hi User6 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
@@ -296,16 +404,20 @@ function! Mode()
 
     if l:mode ==# 'n'
       hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=191
-      hi User3 guifg=#CAE682 ctermfg=191
+      hi User3 guifg=#CAE682 ctermfg=190
+      hi User4 guifg=#CAE682 ctermfg=190
     elseif l:mode ==# "i"
       hi User2 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
-      hi User3 guifg=#FFFFFF ctermfg=255
+      hi User3 guifg=#FFFFFF ctermfg=27
+      hi User4 guifg=#FFFFFF ctermfg=27
     elseif l:mode ==# "R"
       hi User2 guifg=#FFFFFF guibg=#df0000 ctermfg=255 ctermbg=162
       hi User3 guifg=#df0000 ctermfg=162
+      hi User4 guifg=#df0000 ctermfg=162
     elseif l:mode ==? "v" || l:mode ==# ""
       hi User2 guifg=#4e4e4e guibg=#7E30A8 ctermfg=254 ctermbg=91
       hi User3 guifg=#7E30A8 ctermfg=91
+      hi User4 guifg=#7E30A8 ctermfg=91
     endif
   endif
 
@@ -353,17 +465,17 @@ autocmd FileType python setlocal completeopt-=preview
 " enable all Python syntax highlighting features
 let python_highlight_all = 1
 " template
-autocmd BufNewFile *.py 0r $HOME/.vim/template/template.py
+"autocmd BufNewFile *.py 0r $HOME/.vim/template/template.py
 
 " ==========================================================
 "  C/C++
 " ==========================================================
-autocmd BufNewFile *.c 0r $HOME/.vim/template/template.c
-autocmd BufNewFile *.h 0r $HOME/.vim/template/template.h
-
-autocmd BufNewFile *.cc 0r $HOME/.vim/template/template.cc
-autocmd BufNewFile *.cpp 0r $HOME/.vim/template/template.cpp
-autocmd BufNewFile *.hpp 0r $HOME/.vim/template/template.hpp
+"autocmd BufNewFile *.c 0r $HOME/.vim/template/template.c
+"autocmd BufNewFile *.h 0r $HOME/.vim/template/template.h
+"
+"autocmd BufNewFile *.cc 0r $HOME/.vim/template/template.cc
+"autocmd BufNewFile *.cpp 0r $HOME/.vim/template/template.cpp
+"autocmd BufNewFile *.hpp 0r $HOME/.vim/template/template.hpp
 
 " ==========================================================
 "  html/css
