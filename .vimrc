@@ -93,12 +93,6 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " AutoComplPop like behavior.
 "let g:neocomplete#enable_auto_select = 1
 
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -126,6 +120,9 @@ syntax on
 
 " For plugins to load correctly
 filetype plugin indent on
+
+" Stop automatic completion
+autocmd VimEnter NeoCompleteLock
 
 " ==========================================================
 "  General settings
@@ -396,28 +393,37 @@ function! Mode()
 
     hi User2 guifg=#005f00 guibg=#CAE682 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
     hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
-    hi User4 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
-    hi User5 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
-    hi User6 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
-    hi User7 guifg=#ffff00 guibg=#8a8a8a gui=bold ctermfg=190 ctermbg=245 cterm=bold
-    hi User8 guifg=#8a8a8a guibg=#414243 ctermfg=245 ctermbg=238
+    hi User4 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
+    hi User5 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
+    hi User6 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
+    hi User7 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
+    hi User8 guifg=#ffff00 guibg=#8a8a8a gui=bold ctermfg=190 ctermbg=245 cterm=bold
+    hi User9 guifg=#8a8a8a guibg=#414243 ctermfg=245 ctermbg=238
 
     if l:mode ==# 'n'
-      hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=191
-      hi User3 guifg=#CAE682 ctermfg=190
-      hi User4 guifg=#CAE682 ctermfg=190
+      hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=190
+      hi User3 guifg=#CAE682 ctermfg=190 ctermbg=194
+      hi User4 guifg=#CAE682 ctermfg=22 ctermbg=194
+      hi User5 guifg=#CAE682 ctermfg=194
+      hi User8 guifg=#CAE682 ctermfg=190
     elseif l:mode ==# "i"
       hi User2 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
-      hi User3 guifg=#FFFFFF ctermfg=27
-      hi User4 guifg=#FFFFFF ctermfg=27
+      hi User3 guifg=#FFFFFF ctermfg=255 ctermbg=75
+      hi User4 guifg=#FFFFFF ctermfg=19 ctermbg=75
+      hi User5 guifg=#FFFFFF ctermfg=75
+      hi User8 guifg=#FFFFFF ctermfg=27
     elseif l:mode ==# "R"
-      hi User2 guifg=#FFFFFF guibg=#df0000 ctermfg=255 ctermbg=162
-      hi User3 guifg=#df0000 ctermfg=162
-      hi User4 guifg=#df0000 ctermfg=162
+      hi User2 guifg=#df0000 guibg=#df0000 ctermfg=255 ctermbg=162
+      hi User3 guifg=#df0000 ctermfg=162 ctermbg=225
+      hi User4 guifg=#df0000 ctermfg=162 ctermbg=225
+      hi User5 guifg=#df0000 ctermfg=225
+      hi User8 guifg=#df0000 ctermfg=162
     elseif l:mode ==? "v" || l:mode ==# ""
       hi User2 guifg=#4e4e4e guibg=#7E30A8 ctermfg=254 ctermbg=91
-      hi User3 guifg=#7E30A8 ctermfg=91
-      hi User4 guifg=#7E30A8 ctermfg=91
+      hi User3 guifg=#7E30A8 ctermfg=91 ctermbg=183
+      hi User4 guifg=#7E30A8 ctermfg=91 ctermbg=183
+      hi User5 guifg=#7E30A8 ctermfg=183
+      hi User8 guifg=#7E30A8 ctermfg=91
     endif
   endif
 
@@ -440,22 +446,22 @@ endfunction
 
 set statusline=%2*%{Mode()}%3*⮀%1*
 set statusline+=%#StatusLine#
-set statusline+=%{strlen(fugitive#statusline())>0?'\ ⭠\ ':''}
+set statusline+=%4*%{strlen(fugitive#statusline())>0?'\ ⭠\ ':''}
 set statusline+=%{matchstr(fugitive#statusline(),'(\\zs.*\\ze)')}
 set statusline+=%{strlen(fugitive#statusline())>0?'\ \ ⮁\ ':'\ '}
-set statusline+=%f\ %{&ro?'⭤':''}%{&mod?'+':''}%<
-set statusline+=%4*⮀
+set statusline+=%n\ %f\ %{&ro?'⭤':''}%{&mod?'+':''}%<
+set statusline+=%5*⮀
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%=
-set statusline+=%4*⮂
+set statusline+=%5*⮂
 set statusline+=%#StatusLine#
 set statusline+=\ %{strlen(&fileformat)>0?&fileformat.'\ ⮃\ ':''}
 set statusline+=%{strlen(&fileencoding)>0?&fileencoding.'\ ⮃\ ':''}
 set statusline+=%{strlen(&filetype)>0?&filetype:''}
-set statusline+=\ %8*⮂
-set statusline+=%7*%4p%%
-set statusline+=\ %6*⮂%5*⭡\ %5l:%2c
+set statusline+=\ %9*⮂
+set statusline+=%8*%4p%%
+set statusline+=\ %7*⮂%6*⭡\ %5l:%2c
 
 " ==========================================================
 "  python
