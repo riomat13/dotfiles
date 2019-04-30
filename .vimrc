@@ -94,9 +94,9 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 "let g:neocomplete#enable_auto_select = 1
 
 " Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS ts=2 sts=2 sw=2 expandtab
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags ts=2 sts=2 sw=2 expandtab
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS ts=2 sts=2 sw=2 expandtab
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
@@ -120,9 +120,6 @@ syntax on
 
 " For plugins to load correctly
 filetype plugin indent on
-
-" Stop automatic completion
-autocmd VimEnter NeoCompleteLock
 
 " ==========================================================
 "  General settings
@@ -206,6 +203,14 @@ nnoremap <silent> ]B :blast<CR>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
+"" Emacs keybindings
+inoremap <C-a> <Home>
+inoremap <C-e> <End>
+
+inoremap <C-u> <Esc>d0xi
+inoremap <C-y> <Esc>Pa
+
+
 function! SwitchWindow(dir)
   let this = winnr()
   if '+' == a:dir
@@ -283,6 +288,9 @@ set listchars=tab:▸\ ,eol:¬
 " set list " To enable by default
 " Or use your leader key + l to toggle on/off
 map <leader>l :set list!<CR> " Toggle tabs and EOL
+
+" Toggle on/off automatic completion
+nnoremap <leader>c :NeoCompleteToggle<CR>
 
 " ==========================================================
 "  Vim design/theme/color scheme
