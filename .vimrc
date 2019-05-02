@@ -204,8 +204,10 @@ cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
 "" Emacs keybindings
-inoremap <C-a> <Home>
+inoremap <C-a> <Home><C-Right>
 inoremap <C-e> <End>
+nnoremap <Leader>a <Home>w
+nnoremap <Leader>e <End>
 
 inoremap <C-u> <Esc>d0xi
 inoremap <C-y> <Esc>Pa
