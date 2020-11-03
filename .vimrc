@@ -36,62 +36,21 @@ if dein#check_install()
 endif
 
 call dein#add('Shougo/deoplete.nvim')
+call dein#add('deoplete-plugins/deoplete-jedi')
+
 if !has('nvim')
   call dein#add('roxma/nvim-yarp')
   call dein#add('roxma/vim-hug-neovim-rpc')
 endif
+
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#emable_smart_case = 1
 
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('Shougo/neosnippet-snippets')
 
-" ----------------------------
-"  Neocomplete
-" ----------------------------
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
+call dein#add('vim-airline/vim-airline')
+call dein#add('vim-airline/vim-airline-themes')
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS ts=2 sts=2 sw=2 expandtab
@@ -99,18 +58,6 @@ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags ts=2 
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS ts=2 sts=2 sw=2 expandtab
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " Helps force plugins to load correctly when it is turned back on below
 filetype off
@@ -291,9 +238,6 @@ set listchars=tab:▸\ ,eol:¬
 " Or use your leader key + l to toggle on/off
 map <leader>l :set list!<CR> " Toggle tabs and EOL
 
-" Toggle on/off automatic completion
-nnoremap <leader>c :NeoCompleteToggle<CR>
-
 " ==========================================================
 "  Vim design/theme/color scheme
 " ==========================================================
@@ -318,12 +262,12 @@ set guifont=DroidSansMono\ Nerd\ Font\ 11
 let g:WebDevIconUnicodeDecorateFolderNodes = 1
 
 " Line style (Airline)
-"let g:airline_theme = 'wombat'
-"let g:airline#extensions#branch#enabled = 1
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#formatter = 'jsformatter'
-"let g:airline#extensions#wordcount#enabled = 0
-"let g:airline_powerline_fonts = 1
+let g:airline_theme = 'wombat'
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'jsformatter'
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline_powerline_fonts = 1
 
 " ----------------------------
 "  neosnippet
@@ -394,84 +338,84 @@ set noswapfile " no swap file when editing
 " ==========================================================
 " TODO: need to customize
 " Statusline modifications, added Fugitive Status Line & Syntastic Error Message
-let g:last_mode = ''
-function! Mode()
-  let l:mode = mode()
-
-  if l:mode !=# g:last_mode
-    let g:last_mode = l:mode
-
-    hi User2 guifg=#005f00 guibg=#CAE682 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
-    hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
-    hi User4 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
-    hi User5 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
-    hi User6 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
-    hi User7 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
-    hi User8 guifg=#ffff00 guibg=#8a8a8a gui=bold ctermfg=190 ctermbg=245 cterm=bold
-    hi User9 guifg=#8a8a8a guibg=#414243 ctermfg=245 ctermbg=238
-
-    if l:mode ==# 'n'
-      hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=190
-      hi User3 guifg=#CAE682 ctermfg=190 ctermbg=194
-      hi User4 guifg=#CAE682 ctermfg=22 ctermbg=194
-      hi User5 guifg=#CAE682 ctermfg=194
-      hi User8 guifg=#CAE682 ctermfg=190
-    elseif l:mode ==# "i"
-      hi User2 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
-      hi User3 guifg=#FFFFFF ctermfg=255 ctermbg=75
-      hi User4 guifg=#FFFFFF ctermfg=19 ctermbg=75
-      hi User5 guifg=#FFFFFF ctermfg=75
-      hi User8 guifg=#FFFFFF ctermfg=27
-    elseif l:mode ==# "R"
-      hi User2 guifg=#df0000 guibg=#df0000 ctermfg=255 ctermbg=162
-      hi User3 guifg=#df0000 ctermfg=162 ctermbg=225
-      hi User4 guifg=#df0000 ctermfg=162 ctermbg=225
-      hi User5 guifg=#df0000 ctermfg=225
-      hi User8 guifg=#df0000 ctermfg=162
-    elseif l:mode ==? "v" || l:mode ==# ""
-      hi User2 guifg=#4e4e4e guibg=#7E30A8 ctermfg=254 ctermbg=91
-      hi User3 guifg=#7E30A8 ctermfg=91 ctermbg=183
-      hi User4 guifg=#7E30A8 ctermfg=91 ctermbg=183
-      hi User5 guifg=#7E30A8 ctermfg=183
-      hi User8 guifg=#7E30A8 ctermfg=91
-    endif
-  endif
-
-  if l:mode ==# "n"
-    return "  NORMAL "
-  elseif l:mode ==# "i"
-    return "  INSERT "
-  elseif l:mode ==# "R"
-    return "  REPLACE "
-  elseif l:mode ==# "v"
-    return "  VISUAL "
-  elseif l:mode ==# "V"
-    return "  V·LINE "
-  elseif l:mode ==# ""
-    return "  V·BLOCK "
-  else
-    return l:mode
-  endif
-endfunction
-
-set statusline=%2*%{Mode()}%3*⮀%1*
-set statusline+=%#StatusLine#
-set statusline+=%4*%{strlen(fugitive#statusline())>0?'\ ⭠\ ':''}
-set statusline+=%{matchstr(fugitive#statusline(),'(\\zs.*\\ze)')}
-set statusline+=%{strlen(fugitive#statusline())>0?'\ \ ⮁\ ':'\ '}
-set statusline+=%n\ %f\ %{&ro?'⭤':''}%{&mod?'+':''}%<
-set statusline+=%5*⮀
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%=
-set statusline+=%5*⮂
-set statusline+=%#StatusLine#
-set statusline+=\ %{strlen(&fileformat)>0?&fileformat.'\ ⮃\ ':''}
-set statusline+=%{strlen(&fileencoding)>0?&fileencoding.'\ ⮃\ ':''}
-set statusline+=%{strlen(&filetype)>0?&filetype:''}
-set statusline+=\ %9*⮂
-set statusline+=%8*%4p%%
-set statusline+=\ %7*⮂%6*⭡\ %5l:%2c
+"let g:last_mode = ''
+"function! Mode()
+"  let l:mode = mode()
+"
+"  if l:mode !=# g:last_mode
+"    let g:last_mode = l:mode
+"
+"    hi User2 guifg=#005f00 guibg=#CAE682 gui=BOLD ctermfg=22 ctermbg=190 cterm=BOLD
+"    hi User3 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
+"    hi User4 guifg=#FFFFFF guibg=#414243 ctermfg=255 ctermbg=238
+"    hi User5 guifg=#414234 guibg=#2B2B2B ctermfg=248 ctermbg=238
+"    hi User6 guifg=#4e4e4e guibg=#FFFFFF gui=bold ctermfg=239 ctermbg=255 cterm=bold
+"    hi User7 guifg=#FFFFFF guibg=#8a8a8a ctermfg=255 ctermbg=245
+"    hi User8 guifg=#ffff00 guibg=#8a8a8a gui=bold ctermfg=190 ctermbg=245 cterm=bold
+"    hi User9 guifg=#8a8a8a guibg=#414243 ctermfg=245 ctermbg=238
+"
+"    if l:mode ==# 'n'
+"      hi User2 guifg=#005f00 guibg=#CAE682 ctermfg=22 ctermbg=190
+"      hi User3 guifg=#CAE682 ctermfg=190 ctermbg=194
+"      hi User4 guifg=#CAE682 ctermfg=22 ctermbg=194
+"      hi User5 guifg=#CAE682 ctermfg=194
+"      hi User8 guifg=#CAE682 ctermfg=190
+"    elseif l:mode ==# "i"
+"      hi User2 guifg=#005fff guibg=#FFFFFF ctermfg=27 ctermbg=255
+"      hi User3 guifg=#FFFFFF ctermfg=255 ctermbg=75
+"      hi User4 guifg=#FFFFFF ctermfg=19 ctermbg=75
+"      hi User5 guifg=#FFFFFF ctermfg=75
+"      hi User8 guifg=#FFFFFF ctermfg=27
+"    elseif l:mode ==# "R"
+"      hi User2 guifg=#df0000 guibg=#df0000 ctermfg=255 ctermbg=162
+"      hi User3 guifg=#df0000 ctermfg=162 ctermbg=225
+"      hi User4 guifg=#df0000 ctermfg=162 ctermbg=225
+"      hi User5 guifg=#df0000 ctermfg=225
+"      hi User8 guifg=#df0000 ctermfg=162
+"    elseif l:mode ==? "v" || l:mode ==# ""
+"      hi User2 guifg=#4e4e4e guibg=#7E30A8 ctermfg=254 ctermbg=91
+"      hi User3 guifg=#7E30A8 ctermfg=91 ctermbg=183
+"      hi User4 guifg=#7E30A8 ctermfg=91 ctermbg=183
+"      hi User5 guifg=#7E30A8 ctermfg=183
+"      hi User8 guifg=#7E30A8 ctermfg=91
+"    endif
+"  endif
+"
+"  if l:mode ==# "n"
+"    return "  NORMAL "
+"  elseif l:mode ==# "i"
+"    return "  INSERT "
+"  elseif l:mode ==# "R"
+"    return "  REPLACE "
+"  elseif l:mode ==# "v"
+"    return "  VISUAL "
+"  elseif l:mode ==# "V"
+"    return "  V·LINE "
+"  elseif l:mode ==# ""
+"    return "  V·BLOCK "
+"  else
+"    return l:mode
+"  endif
+"endfunction
+"
+"set statusline=%2*%{Mode()}%3*⮀%1*
+"set statusline+=%#StatusLine#
+"set statusline+=%4*%{strlen(fugitive#statusline())>0?'\ ⭠\ ':''}
+"set statusline+=%{matchstr(fugitive#statusline(),'(\\zs.*\\ze)')}
+"set statusline+=%{strlen(fugitive#statusline())>0?'\ \ ⮁\ ':'\ '}
+"set statusline+=%n\ %f\ %{&ro?'⭤':''}%{&mod?'+':''}%<
+"set statusline+=%5*⮀
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%=
+"set statusline+=%5*⮂
+"set statusline+=%#StatusLine#
+"set statusline+=\ %{strlen(&fileformat)>0?&fileformat.'\ ⮃\ ':''}
+"set statusline+=%{strlen(&fileencoding)>0?&fileencoding.'\ ⮃\ ':''}
+"set statusline+=%{strlen(&filetype)>0?&filetype:''}
+"set statusline+=\ %9*⮂
+"set statusline+=%8*%4p%%
+"set statusline+=\ %7*⮂%6*⭡\ %5l:%2c
 
 " ==========================================================
 "  python
@@ -492,6 +436,12 @@ let python_highlight_all = 1
 "autocmd BufNewFile *.cc 0r $HOME/.vim/template/template.cc
 "autocmd BufNewFile *.cpp 0r $HOME/.vim/template/template.cpp
 "autocmd BufNewFile *.hpp 0r $HOME/.vim/template/template.hpp
+
+" ==========================================================
+"  yaml
+" ==========================================================
+" disable docstring
+autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab
 
 " ==========================================================
 "  html/css
