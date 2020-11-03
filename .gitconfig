@@ -1,0 +1,7 @@
+[user]
+	name = riomat13
+[alias]
+	trees = log --graph --decorate --oneline --abbrev-commit --all
+    treem = log --graph --decorate --all --date=format:'%Y-%m-%d %H:%M'  --format=format:'%C(bold green)%h%C(reset) %C(yellow)[%ad]%C(reset) %C(white)%s%C(reset)%C(auto)%d%C(reset)'
+[core]
+	editor = vim
